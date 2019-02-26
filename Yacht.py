@@ -1,5 +1,4 @@
 import random
-
 class DataPoint:
     def __init__(self,attributes):
         self.attributes= [1] + attributes[:-1]
@@ -34,8 +33,16 @@ def gradient(DataSet,weights):
         result=addlists(result,scalarprod((dotprod(point.attributes,weights) - point.value),point.attributes))
     return scalarprod(1/len(DataSet),result)
 
-
-
+def Train(TrainingSet,eta):
+    weights = [-14.272190207540115, -0.25095487432513297, -26.555046047994967, -10.546219141992147, 4.062710503122066, 11.915373228065047, 122.09529172849939]
+    weights = [0]*len(DataSet[0].attributes)
+    epoch=0
+    while epoch<20000:
+        weights = subtract(weights,scalarprod(eta,gradient(TrainingSet,weights)))
+        if epoch%1000==0:
+            print("Iteration: ",epoch," MSE Error: ",MSE_cost(TrainingSet,weights),"Weights :",weights,end="\n" )
+        epoch+=1
+    return weights
 
 
 fileobj = open("yacht_hydrodynamics.data","r")
@@ -48,11 +55,5 @@ eta=0.03
 TrainingSet = DataSet[:TrainSize]
 TestSet= DataSet[TrainSize:]
 
-weights = [0]*len(DataSet[0].attributes)
-
-epoch=0
-while MSE_cost(TrainingSet,weights)>10:
-    weights = subtract(weights,scalarprod(eta,gradient(TrainingSet,weights)))
-    if epoch%100==0:
-        print("Iteration: ",epoch," MSE Error: ",MSE_cost(TrainingSet,weights),"Weights :",weights,end="\r" )
-    epoch+=1
+trained_weights=Train(TrainingSet,eta)
+print("Test Error: ", MSE_cost(TestSet,trained_weights))
