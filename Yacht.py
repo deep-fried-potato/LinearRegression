@@ -3,8 +3,8 @@ class DataPoint:
     def __init__(self,attributes):
         self.attributes= [1] + attributes[:-1]
         self.value = attributes[-1]
-        def __str__(self):
-            return str(self.attributes) + " : " +str(self.value)
+    def __str__(self):
+        return str(self.attributes) + " : " +str(self.value)
 
 def dotprod(K, L):
     if len(K) != len(L):
@@ -34,13 +34,12 @@ def gradient(DataSet,weights):
     return scalarprod(1/len(DataSet),result)
 
 def Train(TrainingSet,eta):
-    weights = [-14.272190207540115, -0.25095487432513297, -26.555046047994967, -10.546219141992147, 4.062710503122066, 11.915373228065047, 122.09529172849939]
     weights = [0]*len(DataSet[0].attributes)
     epoch=0
-    while epoch<20000:
+    while any(grad>0.01 for grad in gradient(TrainingSet,weights)):
         weights = subtract(weights,scalarprod(eta,gradient(TrainingSet,weights)))
         if epoch%1000==0:
-            print("Iteration: ",epoch," MSE Error: ",MSE_cost(TrainingSet,weights),"Weights :",weights,end="\n" )
+            print("Iteration: ",epoch," MSE Error: ",MSE_cost(TrainingSet,weights)," Gradient: ",gradient(TrainingSet,weights)," Weights :",weights )
         epoch+=1
     return weights
 
