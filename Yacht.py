@@ -36,7 +36,7 @@ def gradient(DataSet,weights):
 def Train(TrainingSet,eta):
     weights = [0]*len(DataSet[0].attributes)
     epoch=0
-    while any(grad>0.01 for grad in gradient(TrainingSet,weights)):
+    while any(abs(grad)>0.01 for grad in gradient(TrainingSet,weights)):
         weights = subtract(weights,scalarprod(eta,gradient(TrainingSet,weights)))
         if epoch%1000==0:
             print("Iteration: ",epoch," MSE Error: ",MSE_cost(TrainingSet,weights)," Gradient: ",gradient(TrainingSet,weights)," Weights :",weights )
